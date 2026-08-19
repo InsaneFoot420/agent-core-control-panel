@@ -1,0 +1,168 @@
+name: Build Android APK
+
+
+
+on:
+
+  workflow_dispatch:
+  
+  push:
+  
+    paths:
+    
+      - "mobile-source.zip"
+      
+      - ".github/workflows/android-apk.yml"
+      
+
+
+permissions:
+
+  contents: read
+  
+
+
+jobs:
+
+  android-apk:
+  
+    runs-on: ubuntu-24.04
+    
+    timeout-minutes: 30
+    
+    env:
+    
+      EXPO_NO_TELEMETRY: "1"
+      
+      EXPO_PUBLIC_AGENT_API_URL: "https://howtjaltadspwcgldqel.supabase.co/functions/v1/agent-core-api-v2"
+      
+      EXPO_PUBLIC_SUPABASE_URL: "https://howtjaltadspwcgldqel.supabase.co"
+      
+      EXPO_PUBLIC_SUPABASE_ANON_KEY: "sb_publishable_Cwx3uKt0o49J2MhphiJrZg_ZCmlDBqS"
+      
+      EXPO_PUBLIC_AGENT_WORKSPACE_ID: "8039e0b3-8e41-4419-9692-90766014f4c7"
+      
+
+
+    steps:
+    
+      - name: Checkout
+      
+        uses: actions/checkout@v4
+        
+
+
+      - name: Unpack safe mobile source
+      
+        run: unzip -q mobile-source.zip
+        
+
+
+      - name: Setup Node
+      
+        uses: actions/setup-node@v4
+        
+        with:
+        
+          node-version: 22
+          
+          cache: pnpm
+          
+          cache-dependency-path: mobile/pnpm-lock.yaml
+          
+
+
+      - name: Setup pnpm
+      
+        uses: pnpm/action-setup@v4
+        
+        with:
+        
+          version: 9
+          
+
+
+      - name: Install dependencies
+      
+        working-directory: mobile
+        
+        run: pnpm install --frozen-lockfile
+        
+
+
+      - name: Generate Android project
+      
+        working-directory: mobile
+        
+        run: pnpm exec expo prebuild --platform android --non-interactive
+        
+
+
+      - name: Assemble installable debug APK
+      
+        working-directory: mobile/android
+        
+        run: ./gradlew assembleDebug --no-daemon
+        
+
+
+      - name: Upload APK
+      
+        uses: actions/upload-artifact@v4
+        
+        with:
+        
+          name: agent-core-debug-apk
+          
+          path: mobile/android/app/build/outputs/apk/debug/app-debug.apk
+          
+          if-no-files-found: error
+          
+          retention-days: 1
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
