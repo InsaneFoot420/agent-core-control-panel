@@ -20,6 +20,7 @@
     <section class="layout"><div class="stack"><article class="card"><h2>Chat s agentem</h2><div id="chat" class="chat"><div class="empty">Začněte zprávou. Odpověď se zobrazí po dokončení běhu.</div></div><div class="form"><textarea id="chat-input" placeholder="Zadejte úkol nebo otázku pro agenta…"></textarea><button id="send">Odeslat agentovi</button></div></article><article class="card"><h2>Nový úkol</h2><div class="form"><input id="task-title" placeholder="Název úkolu"/><textarea id="task-instructions" placeholder="Co má agent prověřit nebo připravit?"></textarea><button id="create-task">Zadat úkol</button></div></article></div><div class="stack"><article class="card"><h2>Poslední běhy</h2><div id="recent"><div class="empty">Načítám…</div></div></article><article class="card"><h2>Schválení vyžadující rozhodnutí</h2><textarea id="approval-note" placeholder="Volitelná poznámka k rozhodnutí"></textarea><div id="approvals"><div class="empty">Načítám…</div></div></article></div></section>
   </main>
   <script type="module">
+    const API_BASE = "https://howtjaltadspwcgldqel.supabase.co/functions/v1/agent-core-api-v2";
     import { createClient } from 'https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/+esm';
     let config, supabase, session, threadId = null;
     const el = id => document.getElementById(id); const esc = text => String(text ?? '').replace(/[&<>'"]/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;',"'":'&#039;','"':'&quot;'}[c]));
